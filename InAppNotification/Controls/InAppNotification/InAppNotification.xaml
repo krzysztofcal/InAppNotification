@@ -6,9 +6,7 @@
     >
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="ms-appx:///Microsoft.Toolkit.Uwp.UI.Controls/InAppNotification/Styles/MSEdgeNotificationStyle.xaml" />
-        <!--<ResourceDictionary Source="ms-appx:///Microsoft.Toolkit.Uwp.UI.Controls/InAppNotification/Styles/VSCodeNotificationStyle.xaml" />-->
-        <!--<ResourceDictionary Source="styles:MSEdgeNotificationStyle" />-->
+        <ResourceDictionary Source="styles:MSEdgeNotificationStyle" />
     </ResourceDictionary.MergedDictionaries>
 
     <Style TargetType="local:InAppNotification">

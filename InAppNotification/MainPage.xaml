@@ -1,0 +1,189 @@
+﻿<Page
+    x:Class="InAppNotification.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:InAppNotification"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:InAppNotification.Controls.InAppNotification"
+    xmlns:converter="using:InAppNotification.Converters"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <converter:DoubleToNegativeDoubleConverter x:Key="NegativeConverter" />
+        <controls:InAppNotificationTemplateSelector x:Key="NotificationTemplateSelector" 
+                                                    ErrorDataTemplate="{StaticResource ErrorNotificationDataTemplate}"
+                                                    InfoDataTemplate="{StaticResource InfoNotificationDataTemplate}"
+                                                    WarrningDataTemplate="{StaticResource WarnNotificationDataTemplate}"/>
+
+    </Page.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <SplitView Grid.Row="1"
+                   x:Name="Splitter"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Stretch"
+                   DisplayMode="CompactOverlay"
+                   IsPaneOpen="{Binding IsPaneOpen, Mode=TwoWay}" 
+                   OpenPaneLength="150" 
+                   CompactPaneLength="0"
+                   >
+            <SplitView.Pane>
+                <RelativePanel>
+                    <AppBarToggleButton 
+                        Margin="0 0 20 20"
+                        Icon="Pin" 
+                        Width="30" 
+                        Height="30" 
+                        IsChecked="{Binding IsMenuPanePinnedToScreen, Mode=TwoWay}"
+                        RelativePanel.AlignRightWithPanel="True"
+                        RelativePanel.AlignBottomWithPanel="True"
+                                        />
+                    <Border RelativePanel.AlignRightWithPanel="True"
+                            RelativePanel.AlignTopWithPanel="True"
+                            RelativePanel.AlignBottomWithPanel="True"
+                            VerticalAlignment="Stretch"
+                            BorderThickness="0, 0, 1, 0"
+                            BorderBrush="Gray"/>
+                </RelativePanel>
+            </SplitView.Pane>
+            <SplitView.Content>
+                <Grid x:Name="InnerFrameGrid"  
+                      Background="White">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" MaxHeight="100"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!--todo inject views here-->
+                    <Frame Grid.Row="1" 
+                           x:Name="ContentFrame">
+                        <StackPanel VerticalAlignment="Bottom">
+                            <Button
+                                Content="Display Notification"
+                                Command="{Binding DisplayNotificationCommand}" />
+
+                            <Button
+                                Content="Display Data Template Notification"
+                                Command="{Binding DisplayDataTemplateNotificationCommand}" />
+
+                            <Button
+                                Content="Display Data Template Notification (no timeout)"
+                                Command="{Binding DisplayDataTemplateNotificationNoDismissCommand}" />
+
+                            <Button
+                                Content="Display Info Type notification"
+                                Command="{Binding DisplayInfoTypeNotificationCommand}"/>
+
+                            <Button
+                                Content="Display Error Type notification"
+                                Command="{Binding DisplayErrorTypeNotificationCommand}" />
+
+                            <Button
+                                Content="Dissmiss all notifications"
+                                Command="{Binding DissmissAllNotificationsCommand}" />
+                            
+                        </StackPanel>
+                    </Frame>
+
+                    <ItemsControl Grid.Row="1"
+                              x:Name="NotificationListView"
+                        ItemsSource="{Binding NotificationListViewModel.NotificationCollection}"
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Stretch">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <controls:InAppNotification
+                                    x:Name="NotificationControl"
+                                    Style="{StaticResource MSEdgeNotificationStyle}"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Stretch"
+                                    Visibility="Collapsed"
+                                    ShowDismissButton="True"
+                                    DataContext="{Binding}"
+                                    ItemTemplateSelector="{StaticResource NotificationTemplateSelector}"
+                                    NotificationId="{Binding ID}"
+                                    OnClosingCommand="{Binding DataContext.NotificationListViewModel.ClosingCommand, 
+                                        ElementName=NotificationListView}"
+                                    OnClosedCommand="{Binding DataContext.NotificationListViewModel.ClosedCommand,
+                                        ElementName=NotificationListView}"
+                                    AnimationDuration="00:00:00.2"
+                                    VerticalOffset="{Binding ActualHeight, 
+                                        ElementName=NotificationListView, 
+                                        Converter={StaticResource NegativeConverter},
+                                        ConverterParameter={StaticResource InAppNotificationVerticalOffset}}"
+                                    HorizontalOffset="0">
+                                </controls:InAppNotification>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <Grid Grid.Row="0"
+                          Background="Red"
+                          x:Name="SyncStateIndicatorGrid" 
+                          HorizontalAlignment="Stretch"
+                          BorderBrush="DarkRed"
+                          Height="30"
+                          Padding="4 4 0 4"
+                          BorderThickness="0, 0, 0, 1"
+                          VerticalAlignment="Stretch" />
+
+                </Grid>
+            </SplitView.Content>
+
+        </SplitView>
+
+        <Grid x:Name="Header"
+              Grid.Row="0"
+              Height="30"
+              Background="White"
+              Visibility="Visible">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            
+            <Button x:Name="Burger" 
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Visibility="Visible"
+                    Background="White"
+                    Width="30" 
+                    Height="30" 
+                    Content="Burger"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"/>
+            
+            <TextBlock  Grid.Column="2"
+                        TextWrapping="NoWrap"
+                        TextTrimming="Clip"
+                        Text="TitleLeft"/>
+            <TextBlock  Grid.Column="3"
+                        TextWrapping="NoWrap"
+                        TextTrimming="Clip"
+                        HorizontalAlignment="Right" 
+                        Text="TitleRight"  
+                        Margin="0, 0, 10, 0" />
+
+        </Grid>
+        
+        <CommandBar Grid.Row="2"
+                    HorizontalAlignment="Stretch"
+                    Background="Gray"
+                    Foreground="LightGray"
+                    x:Name="CommandBar" />
+    </Grid>
+</Page>

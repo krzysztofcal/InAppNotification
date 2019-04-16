@@ -1,0 +1,14 @@
+﻿<Application
+    x:Class="InAppNotification.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:InAppNotification">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Controls/InAppNotification/Styles/MSEdgeNotificationStyle.xaml"/>
+                <ResourceDictionary Source="Controls/InAppNotification/Styles/NotificationsDataTemplates.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
